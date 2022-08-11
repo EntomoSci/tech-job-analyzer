@@ -40,7 +40,11 @@ The features scraped from the site are listed below, with the first 6 in the sam
 ```py
 # Extracting parent section containing all features.
 # NOTE: The 0 index element is a useless remaning piece of
-# HTML that is inevitably collected with the approach used.
+# HTML that is inevitably collected with the approach used,
+# thats why is excluded. The preserved items contains the
+# HTML of each section listed above in the same order, so
+# first item at index 0 contains the data of 'job_title', 
+# at index 1 of 'description' and so on.
 sections: list[str] = str(page_soup.find('article')\
                       .find('div'))\
                       .split('<h2>')[1:]
