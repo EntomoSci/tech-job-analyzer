@@ -54,8 +54,19 @@ sections: list[str] = str(page_soup.find('article')\
                       .split('<h2>')[1:]
 ```
 
-TODO
+## Data preparations for all raw HTML sections
+The *hacky* method to cut the HTML and get each feature section separately by spliting the code in `<h2>`, returns each section with a `</h2>` that can be used to separate the title of the section from its content. So we've convenient to write a function to do that for all sections.
 ```py
+# Function to separate each section title from its content.
+def get_title_and_content(section: str) -> tuple[str,str]:
+    '''
+    Return raw title and content separately from section.'''
+
+    title, content = section.split('</h2>')
+    data = title.strip(), content.strip()
+
+    return data
+
 # Extracting job_title:
 
 # Extracting location:
