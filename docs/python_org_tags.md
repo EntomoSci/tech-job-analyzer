@@ -25,17 +25,26 @@ job_urls = [job.find('a')['href'] for job in job_cells]
 
 ## Extracting job features from each job page
 
-The features scraped from the site are listed below, with some additional notes associated to some of them:
+The features scraped from the site are listed below, with the first 6 in the same order that appear in the its job page (some additional notes associated to some of them are written):
 1. `job_title`
-2. `location`
-3. `post_date`
-3. `tags`: Used to enhance definition of learning goals.
-4. `is_remote`
-5. `country`
-6. `description`: Will be summarized with *wordclouds*.
-7. `requirements`: **Learning goals** (technologies we need to know to apply).
-
+2. `description`: Will be summarized with *wordclouds*.
+3. `restrictions`
+4. `requirements`: **Learning goals** (technologies we need to know to apply).
+5. `company_about`
+6. `contact_info`
+7. `location`
+8. `post_date`
+9. `tags`: Used to enhance definition of learning goals.
+10. `is_remote`
+11. `country`
 ```py
+# Extracting parent section containing all features.
+# NOTE: The 0 index element is a useless remaning piece of
+# HTML that is inevitably collected with the approach used.
+sections: list[str] = str(page_soup.find('article')\
+                      .find('div'))\
+                      .split('<h2>')[1:]
+
 # Extracting job_title:
 
 # Extracting location:
