@@ -32,11 +32,15 @@ The features scraped from the site are listed below, with the first 6 in the sam
 4. `requirements`: **Learning goals** (technologies we need to know to apply).
 5. `company_about`
 6. `contact_info`
-7. `location`
-8. `post_date`
+
+These features will be added after:
+
+7. `post_date`
+8. `location`
 9. `tags`: Used to enhance definition of learning goals.
 10. `is_remote`
 11. `country`
+
 ```py
 # Extracting parent section containing all features.
 # NOTE: The 0 index element is a useless remaning piece of
@@ -48,7 +52,10 @@ The features scraped from the site are listed below, with the first 6 in the sam
 sections: list[str] = str(page_soup.find('article')\
                       .find('div'))\
                       .split('<h2>')[1:]
+```
 
+TODO
+```py
 # Extracting job_title:
 
 # Extracting location:
