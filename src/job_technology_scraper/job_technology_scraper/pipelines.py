@@ -19,14 +19,14 @@ class PythonJobPipeline:
         '''
         Return a list with the content of all paragraph and list item tags in section.'''
 
-        soup = BS(section, 'html.parser')
-
         # Extracting and concatenating all lists into a single one.
+        soup = BS(section, 'html.parser')
         lists = soup.find_all('ul')
         lists_joined = []
         for i in range(len(lists)):
             lists_joined.extend(lists[i])
 
+        # Extracting and joining all text content of <p> and <li> tags.
         paragraph_content = [p.text for p in lists.find_all('p')]
         lists_content = [li.text for li in lists_joined]
         full_data: list[str] = paragraph_content + lists_content
@@ -35,18 +35,24 @@ class PythonJobPipeline:
 
 
     def process_item(self, item: PythonJobItem, spider):
-        # NOTE: job_title is comes already cleaned.
+        adapter = ItemAdapter(item)
 
-        # Processing job_description.
+        # Processing all item's features.
+        # NOTE: job_title comes already cleaned.
         clean_description: str = BS(item['job_description'], 'html.parser').text.replace('\n', ' ').strip()
-
-        # Processing job_restrictions:
         clean_restrictions: str = BS(item['job_restrictions', 'html.parser']).text.replace('\n', ' ').strip()
-
-        # Processing job_requirements:
         clean_requirements: list[str] = self._extract_paragraphs_and_list_items(item['job_requirements'])
-        # TODO: Processing company_about:
-        # TODO: Processing contact_info:
+        clean_company_about: list[str] = self._extract_paragraphs_and_list_items(item['company_about'])
+        clean_contact_info = list[str] = [x.text for x in BS(item['contact_info'], 'html.parser').find_all('li')]
+
+        # Settings the new cleaned features back to the item.
+        adapter['job_description'] = clean_description
+        adapter['job_restrictions'] = clean_restrictions
+        adapter['job_requirements'] = clean_requirements
+        adapter['company_about'] = clean_company_about
+        adapter['contact_info'] = clean_contact_info
+
+        return item
 
 
 class JobTechnologyScraperPipeline:
