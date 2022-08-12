@@ -1,6 +1,6 @@
 import scrapy
 from scrapy.http import HtmlResponse
-from job_technology_scraper.items import PythonJob
+from job_technology_scraper.items import PythonJobItem
 from bs4 import BeautifulSoup as BS
 
 
@@ -42,7 +42,7 @@ class PythonOrgSpider(scrapy.Spider):
         _, contact_info = data[5]
 
         # Yielding the raw data for each job feature.
-        yield PythonJob(
+        yield PythonJobItem(
             job_title=job_title,
             job_description=job_description,
             job_restrictions=job_restrictions,
@@ -66,6 +66,6 @@ class PythonOrgSpider(scrapy.Spider):
             next_page_url = self.start_urls[0] + next_page
             yield response.follow(next_page_url, callback=self.parse)
         else:
-            # Requesting each individual job page when no are more job list pages.
+            # Requesting each individual job page when are no more job list pages.
             for url in self.job_page_urls:
                 yield scrapy.Request(url, callback=self.extract_job_data)

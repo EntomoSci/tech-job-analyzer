@@ -7,7 +7,7 @@ import scrapy
 from scrapy import Item, Field
 
 
-class PythonJob(Item):
+class PythonJobItem(Item):
     '''
     Class that represent a Python job from python.org.'''
 
