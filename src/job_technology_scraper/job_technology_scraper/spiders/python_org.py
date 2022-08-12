@@ -33,25 +33,27 @@ class PythonOrgSpider(scrapy.Spider):
                                            .split('<h2>')[1:]
 
         # Extracting separate data for all sections.
-        # TODO: Add a mechanism to identify what section correspond the given content by
-        # checking its title in the <h2> tag to store it in the correct variable. 
         data: list[tuple[str,str]] = [self._get_title_and_content(section) for section in sections]
-        _, job_title = data[0]
-        _, job_description = data[1]
-        _, job_restrictions = data[2]
-        _, job_requirements = data[3]
-        _, company_about = data[4]
-        _, contact_info = data[5]
+        
+        # Filling each feature variable to its correponding content by checking their title.
+        job_item_dict = {}
+        for sample in data:
+            sample: tuple[str,str]
+            match sample[0].lower():
+                case 'job title':
+                   job_item_dict['job_title'] = sample[1]
+                case 'job description':
+                   job_item_dict['job_description'] = sample[1]
+                case 'restrictions':
+                   job_item_dict['job_restrictions'] = sample[1]
+                case 'requirements':
+                   job_item_dict['job_requirements'] = sample[1]
+                case 'about the company':
+                   job_item_dict['company_about'] = sample[1]
+                case 'contact info':
+                   job_item_dict['contact_info'] = sample[1]
 
-        # Yielding the raw data for each job feature.
-        return PythonJobItem(
-            job_title=job_title,
-            job_description=job_description,
-            job_restrictions=job_restrictions,
-            job_requirements=job_requirements,
-            company_about=company_about,
-            contact_info=contact_info
-            )
+        return PythonJobItem(job_item_dict)
 
 
     def parse(self, response: HtmlResponse):

@@ -73,16 +73,11 @@ ITEM_PIPELINES = {
 }
 
 FEEDS = {
-   pathlib.Path(__file__).parents[3].joinpath('data', 'py_jobs.json'): {
+   f"file:///{pathlib.Path(__file__).parents[3].joinpath('data', 'py_jobs.json')}": {
         'format': 'json',
         'encoding': 'utf8',
-        'store_empty': False,
-        'item_classes': [PythonJobItem, 'job_technology_scraper.items.PythonJobItem'],
-        'fields': None,
         'indent': 4,
-        'item_export_kwargs': {
-           'export_empty_fields': True,
-        }
+        'store_empty': True,
    }
 }
 
