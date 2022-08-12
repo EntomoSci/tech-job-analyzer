@@ -7,6 +7,11 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+
+import pathlib
+from job_technology_scraper.items import PythonJobItem
+
+
 BOT_NAME = 'job_technology_scraper'
 
 SPIDER_MODULES = ['job_technology_scraper.spiders']
@@ -66,6 +71,21 @@ ITEM_PIPELINES = {
    'job_technology_scraper.pipelines.PythonJobPipeline': 200,
 #    'job_technology_scraper.pipelines.JobTechnologyScraperPipeline': 300,
 }
+
+FEEDS = {
+   pathlib.Path(__file__).parents[3].joinpath('data', 'py_jobs.json'): {
+        'format': 'json',
+        'encoding': 'utf8',
+        'store_empty': False,
+        'item_classes': [PythonJobItem, 'job_technology_scraper.items.PythonJobItem'],
+        'fields': None,
+        'indent': 4,
+        'item_export_kwargs': {
+           'export_empty_fields': True,
+        }
+   }
+}
+
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

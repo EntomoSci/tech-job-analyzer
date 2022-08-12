@@ -11,7 +11,7 @@ class PythonOrgSpider(scrapy.Spider):
     job_page_urls: list[str] = []
 
 
-    def _get_title_and_content(section: str) -> tuple[str,str]:
+    def _get_title_and_content(self, section: str) -> tuple[str,str]:
         '''
         Return raw title and content separately from section.'''
 
@@ -33,6 +33,8 @@ class PythonOrgSpider(scrapy.Spider):
                                            .split('<h2>')[1:]
 
         # Extracting separate data for all sections.
+        # TODO: Add a mechanism to identify what section correspond the given content by
+        # checking its title in the <h2> tag to store it in the correct variable. 
         data: list[tuple[str,str]] = [self._get_title_and_content(section) for section in sections]
         _, job_title = data[0]
         _, job_description = data[1]
@@ -42,7 +44,7 @@ class PythonOrgSpider(scrapy.Spider):
         _, contact_info = data[5]
 
         # Yielding the raw data for each job feature.
-        yield PythonJobItem(
+        return PythonJobItem(
             job_title=job_title,
             job_description=job_description,
             job_restrictions=job_restrictions,
@@ -62,10 +64,9 @@ class PythonOrgSpider(scrapy.Spider):
 
         # Going to the next page and repeating the process.
         next_page: str|None = response.css('section ul li.next a')[0].attrib['href']
-        if next_page is not None or next_page != '':
+        if next_page != '':  # CONDITIONAL DISABLED: "next_page is not"
             next_page_url = self.start_urls[0] + next_page
             yield response.follow(next_page_url, callback=self.parse)
-        else:
-            # Requesting each individual job page when are no more job list pages.
+        else:  # Requesting each individual job page when are no more job list pages.
             for url in self.job_page_urls:
-                yield scrapy.Request(url, callback=self.extract_job_data)
+                yield scrapy.Request(self.start_urls[0] + url.removeprefix('/jobs'), callback=self.extract_job_data)
