@@ -1,5 +1,6 @@
 import scrapy
 from scrapy.http import HtmlResponse
+from job_technology_scraper.items import PythonJob
 from bs4 import BeautifulSoup as BS
 
 
@@ -41,14 +42,14 @@ class PythonOrgSpider(scrapy.Spider):
         _, contact_info = data[5]
 
         # Yielding the raw data for each job feature.
-        yield {
-            'job_title': job_title,
-            'job_description': job_description,
-            'job_restrictions': job_restrictions,
-            'job_requirements': job_requirements,
-            'company_about': company_about,
-            'contact_info': contact_info
-        }
+        yield PythonJob(
+            job_title=job_title,
+            job_description=job_description,
+            job_restrictions=job_restrictions,
+            job_requirements=job_requirements,
+            company_about=company_about,
+            contact_info=contact_info
+            )
 
 
     def parse(self, response: HtmlResponse):

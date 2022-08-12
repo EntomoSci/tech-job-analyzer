@@ -55,7 +55,7 @@ sections: list[str] = str(page_soup.find('article')\
 ```
 
 ## Data preparations for all raw HTML sections
-The *hacky* method to cut the HTML and get each feature section separately by spliting the code in `<h2>`, returns each section with a `</h2>` that can be used to separate the title of the section from its content. So we've convenient to write a function to do that for all sections.
+The *hacky* method to cut the HTML and get each feature section separately by spliting the code in `<h2>`, returns each section with a `</h2>` that can be used to separate the title of the section from its content. So it would be convenient to write a function to do that for all sections.
 
 **Note**: The dummy variables `_` receive the titles of the sections that can be used to ensure that the data goes to the correct variables. If the structure of job page varies from job to job, you must consider using these variables.
 ```py
