@@ -50,8 +50,8 @@ These features will be added after:
 # first item at index 0 contains the data of 'job_title', 
 # at index 1 of 'description' and so on.
 sections: list[str] = str(page_soup.find('article')\
-                      .find('div'))\
-                      .split('<h2>')[1:]
+                                   .find('div'))\
+                                   .split('<h2>')[1:]
 ```
 
 ## Data preparations for all raw HTML sections

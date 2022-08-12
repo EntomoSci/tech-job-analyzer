@@ -10,11 +10,45 @@ class PythonOrgSpider(scrapy.Spider):
     job_page_urls: list[str] = []
 
 
+    def _get_title_and_content(section: str) -> tuple[str,str]:
+        '''
+        Return raw title and content separately from section.'''
+
+        title, content = section.split('</h2>')
+        data = title.strip(), content.strip()
+
+        return data
+
+
     def extract_job_data(self, response: HtmlResponse):
         '''
-        Feature extraction method for the individual job pages.'''
+        Job feature extraction method for the individual job pages.'''
 
-        # TODO: Add job page scraping with quick cleaning.
+        # Extracting parent section containing all features.
+        job_page = response.css('section').get()
+        page_soup = BS(job_page, 'html.parser')
+        sections: list[str] = str(page_soup.find('article')\
+                                           .find('div'))\
+                                           .split('<h2>')[1:]
+
+        # Extracting separate data for all sections.
+        data: list[tuple[str,str]] = [self._get_title_and_content(section) for section in sections]
+        _, job_title = data[0]
+        _, job_description = data[1]
+        _, job_restrictions = data[2]
+        _, job_requirements = data[3]
+        _, company_about = data[4]
+        _, contact_info = data[5]
+
+        # Yielding the raw data for each job feature.
+        yield {
+            'job_title': job_title,
+            'job_description': job_description,
+            'job_restrictions': job_restrictions,
+            'job_requirements': job_requirements,
+            'company_about': company_about,
+            'contact_info': contact_info
+        }
 
 
     def parse(self, response: HtmlResponse):
